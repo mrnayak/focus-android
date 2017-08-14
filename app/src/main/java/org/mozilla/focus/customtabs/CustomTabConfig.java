@@ -1,4 +1,4 @@
-package org.mozilla.focus.web;
+package org.mozilla.focus.customtabs;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -74,7 +74,7 @@ public class CustomTabConfig {
         this.unsupportedFeatureList = unsupportedFeatureList;
     }
 
-    /* package-private */ static boolean isCustomTabIntent(final @NonNull SafeIntent intent) {
+    public static boolean isCustomTabIntent(final @NonNull SafeIntent intent) {
         return intent.hasExtra(CustomTabsIntent.EXTRA_SESSION);
     }
 
@@ -140,7 +140,7 @@ public class CustomTabConfig {
         return new ActionButtonConfig(description, icon, pendingIntent);
     }
 
-    /* package-private */ static CustomTabConfig parseCustomTabIntent(final @NonNull Context context, final @NonNull SafeIntent intent) {
+    public static CustomTabConfig parseCustomTabIntent(final @NonNull Context context, final @NonNull SafeIntent intent) {
         @ColorInt Integer toolbarColor = null;
         if (intent.hasExtra(CustomTabsIntent.EXTRA_TOOLBAR_COLOR)) {
             toolbarColor = intent.getIntExtra(CustomTabsIntent.EXTRA_TOOLBAR_COLOR, -1);

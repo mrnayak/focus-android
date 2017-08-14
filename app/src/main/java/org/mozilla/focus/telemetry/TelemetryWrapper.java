@@ -324,10 +324,6 @@ public final class TelemetryWrapper {
         TelemetryEvent.create(Category.ACTION, Method.CLICK, Object.NOTIFICATION, Value.ERASE).queue();
     }
 
-    public static void eraseNotificationActionEvent() {
-        TelemetryEvent.create(Category.ACTION, Method.CLICK, Object.NOTIFICATION_ACTION, Value.ERASE).queue();
-    }
-
     public static void eraseAndOpenNotificationActionEvent() {
         TelemetryEvent.create(Category.ACTION, Method.CLICK, Object.NOTIFICATION_ACTION, Value.ERASE_AND_OPEN).queue();
     }

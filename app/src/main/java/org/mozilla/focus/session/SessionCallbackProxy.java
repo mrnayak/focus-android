@@ -1,0 +1,92 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.mozilla.focus.session;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
+
+import org.mozilla.focus.web.Download;
+import org.mozilla.focus.web.IWebView;
+
+public class SessionCallbackProxy implements IWebView.Callback {
+    /* package */ static final int MINIMUM_PROGRESS = 5;
+
+    private final Session session;
+    private final IWebView.Callback delegate;
+
+    public SessionCallbackProxy(Session session, IWebView.Callback delegate) {
+        this.session = session;
+        this.delegate = delegate;
+    }
+
+    @Override
+    public void onPageStarted(String url) {
+        session.setLoading(true);
+        session.setSecure(false);
+
+        // We are always setting the progress to 5% when a new page starts loading. Otherwise it might
+        // look like the browser is doing nothing (on a slow network) until we receive a progress
+        // from the WebView.
+        session.setProgress(MINIMUM_PROGRESS);
+
+        session.setUrl(url);
+    }
+
+    @Override
+    public void onPageFinished(boolean isSecure) {
+        session.setLoading(false);
+        session.setSecure(isSecure);
+    }
+
+    @Override
+    public void onProgress(int progress) {
+        // We do not want the progress to go backwards - so we always set it to at least the minimum.
+        session.setProgress(Math.max(MINIMUM_PROGRESS, progress));
+    }
+
+    @Override
+    public void onURLChanged(String url) {
+        session.setUrl(url);
+    }
+
+
+    @Override
+    public void countBlockedTracker() {
+        //noinspection ConstantConditions - The value is never null
+        session.setTrackersBlocked(session.getBlockedTrackers().getValue() + 1);
+    }
+
+    @Override
+    public void resetBlockedTrackers() {
+        session.setTrackersBlocked(0);
+    }
+
+    @Override
+    public boolean handleExternalUrl(String url) {
+        return delegate.handleExternalUrl(url); // TODO: Replace
+    }
+
+    @Override
+    public void onDownloadStart(Download download) {
+        delegate.onDownloadStart(download); // TODO: Replace
+    }
+
+    @Override
+    public void onLongPress(IWebView.HitTarget hitTarget) {
+        delegate.onLongPress(hitTarget); // TODO: Replace
+    }
+
+    @Override
+    public void onEnterFullScreen(@NonNull IWebView.FullscreenCallback callback, @Nullable View view) {
+        delegate.onEnterFullScreen(callback, view); // TODO: Replace
+    }
+
+    @Override
+    public void onExitFullScreen() {
+        delegate.onExitFullScreen(); // TODO: Replace
+    }
+
+}

@@ -133,6 +133,9 @@ public class FirstrunFragment extends Fragment implements View.OnClickListener {
                 .putBoolean(FIRSTRUN_PREF, true)
                 .apply();
 
-        ((MainActivity) getActivity()).firstrunFinished();
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .remove(this)
+                .commit();
     }
 }

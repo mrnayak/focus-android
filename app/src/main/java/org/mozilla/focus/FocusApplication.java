@@ -5,14 +5,24 @@
 
 package org.mozilla.focus;
 
+import android.arch.lifecycle.Observer;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import org.mozilla.focus.architecture.NonNullObserver;
 import org.mozilla.focus.locale.LocaleAwareApplication;
 import org.mozilla.focus.search.SearchEngineManager;
+import org.mozilla.focus.session.NotificationSessionObserver;
+import org.mozilla.focus.session.Session;
+import org.mozilla.focus.session.SessionManager;
+import org.mozilla.focus.session.SessionNotificationService;
 import org.mozilla.focus.telemetry.TelemetryWrapper;
 import org.mozilla.focus.utils.AdjustHelper;
 import org.mozilla.focus.utils.AppConstants;
+
+import java.util.List;
 
 public class FocusApplication extends LocaleAwareApplication {
 
@@ -28,6 +38,10 @@ public class FocusApplication extends LocaleAwareApplication {
 
         TelemetryWrapper.init(this);
         AdjustHelper.setupAdjustIfNeeded(this);
+
+        SessionManager.getInstance()
+                .getSessions()
+                .observeForever(new NotificationSessionObserver(this));
     }
 
     private void enableStrictMode() {
